@@ -1,5 +1,9 @@
 # Stellar Stream Hive — Contracts
 
+[![CI](https://github.com/Stellar-Hive/stellar-stream-hive-contract/actions/workflows/ci.yml/badge.svg)](https://github.com/Stellar-Hive/stellar-stream-hive-contract/actions/workflows/ci.yml)
+[![Security audit](https://github.com/Stellar-Hive/stellar-stream-hive-contract/actions/workflows/audit.yml/badge.svg)](https://github.com/Stellar-Hive/stellar-stream-hive-contract/actions/workflows/audit.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Soroban smart contracts for real-time, per-ledger token streaming on
 Stellar. Think Sablier or Superfluid, native to Stellar: an employer
 streams tokens to a recipient continuously between a start and end
