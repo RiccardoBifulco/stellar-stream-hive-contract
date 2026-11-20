@@ -5,6 +5,7 @@ edition.workspace = true
 license.workspace = true
 repository.workspace = true
 description = "Vault contract for Stellar Stream Hive: custodies funds locked in payment streams."
+publish = false
 
 [lib]
 crate-type = ["cdylib", "rlib"]

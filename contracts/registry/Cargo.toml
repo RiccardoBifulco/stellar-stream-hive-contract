@@ -5,6 +5,7 @@ edition.workspace = true
 license.workspace = true
 repository.workspace = true
 description = "Registry contract for Stellar Stream Hive: on-chain index and aggregate stats for streams."
+publish = false
 
 [lib]
 crate-type = ["cdylib", "rlib"]
