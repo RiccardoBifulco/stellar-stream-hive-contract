@@ -11,6 +11,7 @@
 //! metadata and instructs the vault to move money via `deposit` /
 //! `release` / `refund`.
 #![no_std]
+#![deny(unsafe_code)]
 
 mod error;
 mod events;

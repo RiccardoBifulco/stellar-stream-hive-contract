@@ -18,6 +18,7 @@
 //! for the full rationale and how to harden this further (e.g. an
 //! authorized-writer allowlist) in a future version.
 #![no_std]
+#![deny(unsafe_code)]
 
 mod error;
 mod events;

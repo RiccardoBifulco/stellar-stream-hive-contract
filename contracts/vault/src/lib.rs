@@ -12,6 +12,7 @@
 //! `set_stream_contract`. Anyone else calling these functions is rejected
 //! with [`VaultError::Unauthorized`] before any token movement happens.
 #![no_std]
+#![deny(unsafe_code)]
 
 mod error;
 mod events;
