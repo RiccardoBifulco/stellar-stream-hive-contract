@@ -215,6 +215,12 @@ impl StreamContract {
     /// Soroban's auth framework ("frame is already authorized"), so this
     /// function must NOT also call `recipient.require_auth()` itself.
     ///
+    /// Consequence: when nothing is withdrawable (e.g. before the cliff or
+    /// after everything was withdrawn) the call returns `Ok(0)` *without*
+    /// reaching `withdraw`, so it does not require the recipient's signature.
+    /// The recipient identity is still checked (`Unauthorized`). This is
+    /// intentional and harmless: no funds move and no event is emitted.
+    ///
     /// # Errors
     ///
     /// - `StreamError::StreamNotFound`: no stream exists with `stream_id`.

@@ -308,9 +308,7 @@ fn test_deposit_rejects_token_mismatch_for_existing_stream() {
     other_client.mint(&depositor, &1_000);
 
     // Same stream id, different token: must be rejected.
-    let result = ctx
-        .vault
-        .try_deposit(&depositor, &other_token, &100, &1);
+    let result = ctx.vault.try_deposit(&depositor, &other_token, &100, &1);
     assert_eq!(result, Err(Ok(VaultError::TokenMismatch)));
 }
 

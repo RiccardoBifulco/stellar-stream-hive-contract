@@ -4,7 +4,7 @@ use crate::types::StreamStatus;
 use crate::{StreamContract, StreamContractClient};
 use soroban_sdk::{
     testutils::{Address as _, Ledger as _},
-    token, Address, Env,
+    token, Address, Env, IntoVal,
 };
 
 /// A minimal stand-in for the real vault contract, used only so the stream
@@ -292,6 +292,30 @@ fn test_withdraw_max_returns_zero_before_cliff() {
     assert_eq!(ctx.token.balance(&ctx.recipient), balance_before);
     assert_eq!(ctx.stream.withdrawable_amount(&id), 0);
     assert_eq!(ctx.stream.get_stream(&id).withdrawn, 0);
+}
+
+#[test]
+fn test_withdraw_max_zero_amount_needs_no_auth_but_nonzero_does() {
+    let ctx = setup();
+    let id = ctx.stream.create_stream(
+        &ctx.sender,
+        &ctx.recipient,
+        &ctx.token_address,
+        &AMOUNT,
+        &START,
+        &END,
+        &(START + 400),
+        &true,
+    );
+    set_ledger(&ctx, START + 200); // before the cliff: nothing withdrawable
+
+    // Drop all auths: the zero-amount call still succeeds (documented).
+    ctx.env.set_auths(&[]);
+    assert_eq!(ctx.stream.try_withdraw_max(&ctx.recipient, &id), Ok(Ok(0)));
+
+    // Once something is withdrawable, the delegated `withdraw` needs auth.
+    set_ledger(&ctx, END);
+    assert!(ctx.stream.try_withdraw_max(&ctx.recipient, &id).is_err());
 }
 
 #[test]

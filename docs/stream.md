@@ -157,6 +157,14 @@ Convenience wrapper around `withdraw` that pulls the entire currently
 withdrawable balance and returns the amount withdrawn (0 if nothing was
 available — this is not an error).
 
+Authorization is checked once, inside the delegated `withdraw` call. When
+nothing is withdrawable, `withdraw_max` returns `Ok(0)` before reaching
+`withdraw`, so that zero-amount call does **not** require the recipient's
+signature (the `recipient` must still match the stream's recipient). This is
+intentional: no funds move and no event is emitted. Calling `require_auth`
+up front is not an option because Soroban rejects a second `require_auth` for
+the same address in one invocation.
+
 ### `cancel_stream(env, sender, stream_id)`
 Requires `sender.require_auth()` and that the caller is the stream's
 sender. Fails with `NotCancellable` if the stream was created with
@@ -213,7 +221,7 @@ checks in `contracts/stream/src/lib.rs`.
 | [`initialize`](#initializeenv-admin-vault) | Admin, once | `admin.require_auth()`; a second call fails with `AlreadyInitialized` |
 | [`create_stream`](#create_streamenv-sender-recipient-token-total_amount-start_ledger-end_ledger-cliff_ledger-cancellable---u64) | Sender | `sender.require_auth()`; fails with `Paused` while paused |
 | [`withdraw`](#withdrawenv-recipient-stream_id-amount) | Recipient of the stream | `recipient.require_auth()`; `recipient` must equal the stream's `recipient` (`Unauthorized`) |
-| [`withdraw_max`](#withdraw_maxenv-recipient-stream_id---i128) | Recipient of the stream | `recipient` must equal the stream's `recipient` (`Unauthorized`); authorization comes from the delegated `withdraw` call |
+| [`withdraw_max`](#withdraw_maxenv-recipient-stream_id---i128) | Recipient of the stream | `recipient` must equal the stream's `recipient` (`Unauthorized`); authorization comes from the delegated `withdraw` call, so a zero-amount call (nothing withdrawable) needs no signature |
 | [`cancel_stream`](#cancel_streamenv-sender-stream_id) | Sender of the stream | `sender.require_auth()`; `sender` must equal the stream's `sender` (`Unauthorized`) |
 | [`pause`](#pauseenv--unpauseenv--is_pausedenv---bool) / `unpause` | Admin | `admin.require_auth()` against the stored admin |
 | [`transfer_admin`](#transfer_adminenv-new_admin) | Current admin and the new admin | `require_auth()` on both addresses |
