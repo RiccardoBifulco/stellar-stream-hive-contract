@@ -119,6 +119,50 @@ or refactor — the two `-A` exemptions above are the only ones CI makes.
 using `just`, run those three by hand as spelled out above and in
 "Build, test, deploy".
 
+## Release process (maintainers only)
+
+This section is for maintainers. Contributors do not tag releases or deploy
+contracts; open a pull request as described above and a maintainer handles the
+rest.
+
+Run through this checklist for every release:
+
+1. **Check that `main` is green.** `just check` (or its three commands, see
+   "Before opening a pull request") must pass, and so must the CI and
+   `cargo audit` workflows.
+2. **Update [`CHANGELOG.md`](CHANGELOG.md).** Rename the `[Unreleased]`
+   heading to the new version, and add a fresh empty `[Unreleased]` section
+   above it. Keep the
+   [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format, and call
+   out anything breaking for event consumers or the API.
+3. **Bump the version** in `[workspace.package]` in `Cargo.toml`. The three
+   contract crates inherit it with `version.workspace = true`. Commit
+   `Cargo.lock` if it changes.
+4. **Tag the release.** Create an annotated tag on the merge commit and push
+   it:
+   ```bash
+   git tag -a vX.Y.Z -m "vX.Y.Z"
+   git push origin vX.Y.Z
+   ```
+5. **Build the WASM and record the hashes.** `scripts/deploy.sh` builds with
+   `cargo build --target wasm32v1-none --release`, runs
+   `stellar contract optimize` on each contract, and hashes the
+   `*.optimized.wasm` output. Those hashes are what the deployment records
+   contain, so compute them the same way.
+6. **Deploy and record the result.** Run
+   `scripts/deploy.sh <network> <identity>`. It writes
+   [`deployments/<network>.json`](deployments/README.md) (ids, hashes, admin,
+   timestamp), overwriting the previous file, and prints a table for
+   `DEPLOYMENTS.md`. Mainnet additionally requires `CONFIRM_MAINNET=yes`, and
+   the contracts are unaudited; read [`SECURITY.md`](SECURITY.md) first.
+7. **Update [`DEPLOYMENTS.md`](DEPLOYMENTS.md)** with the printed table, the
+   deployment date and any smoke-test transaction, and commit the updated
+   `deployments/<network>.json` in the same pull request. The old ids survive
+   only in git history and in that file, so do not drop them silently.
+8. **Update docs that mention changed behaviour**, such as `docs/stream.md`
+   and `docs/vault.md`, and tell the API and frontend repos if a contract
+   address, ABI or event shape changed.
+
 ## Dependency audits
 
 `cargo audit` runs on every pull request and weekly on a schedule
