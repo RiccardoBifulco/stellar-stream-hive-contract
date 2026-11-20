@@ -132,6 +132,26 @@ comment explaining why it doesn't apply and, if there is one, a link to an
 upstream issue tracking a real fix. Never disable or remove the audit job to
 make a failure go away.
 
+## Cutting a changelog entry
+
+[`CHANGELOG.md`](CHANGELOG.md) follows
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Contributors add
+their line under `[Unreleased]` in the same pull request as the change.
+Maintainers turn `[Unreleased]` into a release entry when they tag a version:
+
+1. Copy the commented release template under `[Unreleased]` and put it
+   directly below a fresh, empty `[Unreleased]` heading. Replace `X.Y.Z` and
+   `YYYY-MM-DD` with the real version and tag date, then move the entries
+   across. Do not invent a version number or date ahead of the tag.
+2. Update the link references at the bottom of the file. The `[Unreleased]`
+   link currently points at the `main` commit history because no version tag
+   exists yet. Once the first tag `vX.Y.Z` exists, change it to
+   `https://github.com/Stellar-Hive/stellar-stream-hive-contract/compare/vX.Y.Z...HEAD`
+   and add a link for the new version, for example
+   `[X.Y.Z]: https://github.com/Stellar-Hive/stellar-stream-hive-contract/releases/tag/vX.Y.Z`.
+   For later releases, point `[X.Y.Z]` at `compare/vPREVIOUS...vX.Y.Z`.
+3. Check that the tag name used in the links matches the tag you push.
+
 ## The streaming math, explained
 
 Every stream accrues linearly between `start_ledger` and `end_ledger`:

@@ -5,6 +5,22 @@ All notable changes to the Stellar Stream Hive contracts. Format follows
 
 ## [Unreleased]
 
+<!--
+Release entry template. When cutting a release (see "Cutting a changelog
+entry" in CONTRIBUTING.md), rename the [Unreleased] heading above to the new
+version and date, then start a fresh empty [Unreleased] section. Copy this
+skeleton for the new section and delete the groups that stay empty:
+
+## [X.Y.Z] - YYYY-MM-DD
+
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+-->
+
 ### Fixed
 - **Stream (funds stranded on early cancel):** cancelling a stream *before its
   cliff* refunded the sender only the unstreamed remainder, yet
@@ -57,3 +73,5 @@ All notable changes to the Stellar Stream Hive contracts. Format follows
 
 ## [0.1.0]
 - Initial vault, stream and registry contracts.
+
+[Unreleased]: https://github.com/Stellar-Hive/stellar-stream-hive-contract/commits/main
